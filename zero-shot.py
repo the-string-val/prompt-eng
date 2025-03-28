@@ -14,19 +14,19 @@ client = AzureOpenAI(
     azure_endpoint=azure_endpoint
 )
 
-def zero_shot_prompting(prompt):
+def chat_completion(prompt):
     try:
         response = client.chat.completions.create(
             model=deployment_name,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=200, 
+            max_tokens=300, 
             n=1,
             stop=None,
             temperature=0.7,
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error during zero-shot prompting: {e}")
+        print(f"Error during chat_completion: {e}")
         return None
     
 
@@ -39,8 +39,8 @@ def run_chatbot():
             print("Goodbye!")
             break
 
-        response = zero_shot_prompting(user_input)
-        # response = analyze_sentiment(user_input)
+        # response = chat_completion(user_input)
+        response = analyze_sentiment(user_input)
         if response:
             print(f"Chatbot: {response}")
         else:
@@ -48,7 +48,7 @@ def run_chatbot():
 
 def analyze_sentiment(text):
     prompt = f"Categorize the following text as either 'positive,' 'negative,' or 'neutral': '{text}'"
-    result = zero_shot_prompting(prompt)
+    result = chat_completion(prompt)
     return result
 
 if __name__ == "__main__":
